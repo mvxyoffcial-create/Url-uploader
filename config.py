@@ -24,7 +24,7 @@ class Config:
     
     # Download/Upload settings
     MAX_FILE_SIZE = 4 * 1024 * 1024 * 1024  # 4 GB
-    SPEED_LIMIT = 10 * 1024 * 1024  # 10 MB/s
+    SPEED_LIMIT = 100 * 1024 * 1024  # 100 MB/s
     CHUNK_SIZE = 512 * 1024  # 512 KB chunks
     
     # Download directory
