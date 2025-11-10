@@ -2,140 +2,73 @@ import time
 import asyncio
 import math
 from typing import Optional
-from pyrogram.errors import MessageNotModified, FloodWait
-from config import Config  # Import your Config class to use SPEED_LIMIT
 
 class Progress:
-    """Enhanced progress tracker for downloads, uploads, and torrents"""
+    """Progress tracker for downloads and uploads with enhanced UI"""
     
     def __init__(self, client, message):
         self.client = client
         self.message = message
         self.start_time = time.time()
         self.last_update = 0
-        self.update_interval = 2  # Update every 2 seconds for faster feedback
-        self.last_text = ""
-        self.last_percentage = 0
+        self.update_interval = 2  # Update every 2 seconds
         
-    async def progress_callback(self, current, total, status="Processing"):
-        """
-        Enhanced progress callback for pyrogram
-        Works with downloads, uploads, and torrents
-        """
+    async def progress_callback(self, current, total, status="Downloading"):
+        """Progress callback for pyrogram with beautiful formatting"""
         now = time.time()
         
+        # Update only every N seconds to avoid flood
         if now - self.last_update < self.update_interval:
             return
+            
+        self.last_update = now
+        elapsed = now - self.start_time
         
-        try:
-            elapsed = now - self.start_time
-            
-            if current == 0 or elapsed == 0 or total == 0:
-                return
-            
-            # Calculate metrics
-            speed = current / elapsed
-            percentage = (current * 100) / total
-            eta_seconds = (total - current) / speed if speed > 0 else 0
-            
-            if abs(percentage - self.last_percentage) < 1 and percentage < 99:
-                return
-            
-            self.last_percentage = percentage
-            
-            # Progress bar
-            filled = int(percentage / 5)
-            progress_bar = "█" * filled + "░" * (20 - filled)
-            
-            # Format sizes
-            current_formatted = humanbytes(current)
-            total_formatted = humanbytes(total)
-            speed_formatted = humanbytes(int(speed))
-            
-            text = (
-                f"**{status}**\n\n"
-                f"{progress_bar} `{percentage:.1f}%`\n\n"
-                f"📦 **Size:** {current_formatted} / {total_formatted}\n"
-                f"⚡ **Speed:** {speed_formatted}/s\n"
-                f"⏱️ **ETA:** {format_time(eta_seconds)}\n"
-                f"🕐 **Elapsed:** {format_time(elapsed)}"
-            )
-            
-            if text != self.last_text:
-                await self.message.edit_text(text)
-                self.last_text = text
-                self.last_update = now
-                
-        except MessageNotModified:
-            pass
-        except FloodWait as e:
-            await asyncio.sleep(e.value)
-        except Exception:
-            pass
-
-class TorrentProgress(Progress):
-    """Specialized progress tracker for torrent downloads"""
-    
-    def __init__(self, client, message):
-        super().__init__(client, message)
-        self.update_interval = 3
-        
-    async def torrent_progress_callback(self, current, total, extra_info=""):
-        now = time.time()
-        
-        if now - self.last_update < self.update_interval:
+        if current == 0 or elapsed == 0:
             return
+            
+        speed = current / elapsed
+        percentage = current * 100 / total
+        eta_seconds = (total - current) / speed if speed > 0 else 0
+        
+        # Format data
+        current_mb = current / (1024 * 1024)
+        total_mb = total / (1024 * 1024)
+        speed_mb = speed / (1024 * 1024)
+        
+        # Create advanced progress bar (20 blocks)
+        filled = int(percentage / 5)
+        empty = 20 - filled
+        
+        # Use different characters for better visual
+        if filled > 0:
+            progress_bar = "█" * filled + "░" * empty
+        else:
+            progress_bar = "░" * 20
+        
+        # Status emoji
+        status_emoji = "⬇️" if "Download" in status else "⬆️" if "Upload" in status else "🔄"
+        
+        # Create beautiful progress message
+        text = (
+            f"{status_emoji} **{status}**\n\n"
+            f"`{progress_bar}` {percentage:.1f}%\n\n"
+            f"📦 **Size:** {current_mb:.2f} MB / {total_mb:.2f} MB\n"
+            f"🚀 **Speed:** {speed_mb:.2f} MB/s\n"
+            f"⏱️ **ETA:** {format_time(eta_seconds)}\n"
+            f"⏰ **Elapsed:** {format_time(elapsed)}"
+        )
         
         try:
-            elapsed = now - self.start_time
-            
-            if current == 0 or total == 0:
-                text = (
-                    f"**📥 Downloading Torrent**\n\n"
-                    f"⏳ Connecting to peers...\n"
-                    f"{extra_info}"
-                )
-                await self.message.edit_text(text)
-                self.last_update = now
-                return
-            
-            speed = current / elapsed if elapsed > 0 else 0
-            percentage = (current * 100) / total
-            eta_seconds = (total - current) / speed if speed > 0 else 0
-            
-            filled = int(percentage / 5)
-            progress_bar = "█" * filled + "░" * (20 - filled)
-            
-            current_formatted = humanbytes(current)
-            total_formatted = humanbytes(total)
-            speed_formatted = humanbytes(int(speed))
-            
-            text = (
-                f"**📥 Downloading Torrent**\n\n"
-                f"{progress_bar} `{percentage:.1f}%`\n\n"
-                f"📦 **Size:** {current_formatted} / {total_formatted}\n"
-                f"⚡ **Speed:** {speed_formatted}/s\n"
-                f"⏱️ **ETA:** {format_time(eta_seconds)}\n"
-                f"🕐 **Elapsed:** {format_time(elapsed)}\n"
-                f"{extra_info}"
-            )
-            
-            if text != self.last_text:
-                await self.message.edit_text(text)
-                self.last_text = text
-                self.last_update = now
-                
-        except MessageNotModified:
-            pass
-        except FloodWait as e:
-            await asyncio.sleep(e.value)
+            await self.message.edit_text(text)
         except Exception:
             pass
 
 def format_time(seconds):
+    """Format seconds to human readable time"""
     if seconds < 0:
-        return "calculating..."
-    if seconds < 60:
+        return "0s"
+    elif seconds < 60:
         return f"{int(seconds)}s"
     elif seconds < 3600:
         minutes = int(seconds / 60)
@@ -147,102 +80,184 @@ def format_time(seconds):
         return f"{hours}h {minutes}m"
 
 def humanbytes(size):
+    """Convert bytes to human readable format"""
     if not size or size < 0:
         return "0 B"
-    power = 1024
+    
+    power = 2**10
     n = 0
     units = ['B', 'KB', 'MB', 'GB', 'TB']
-    while size >= power and n < len(units) - 1:
+    
+    while size > power and n < len(units) - 1:
         size /= power
         n += 1
+    
     return f"{size:.2f} {units[n]}"
 
-async def speed_limiter(chunk_size, speed_limit=Config.SPEED_LIMIT):
-    """
-    Limit download/upload speed dynamically using Config.SPEED_LIMIT
-    """
-    if speed_limit <= 0:
-        return
+async def speed_limiter(chunk_size, speed_limit):
+    """Limit download/upload speed"""
     delay = chunk_size / speed_limit
-    if delay > 0:
-        await asyncio.sleep(delay)
+    await asyncio.sleep(delay)
 
-# --- Other utility functions remain unchanged ---
 def is_url(text):
-    if not text or not isinstance(text, str):
+    """Check if text is a valid URL"""
+    if not text:
         return False
-    text = text.strip().lower()
-    valid_schemes = ('http://', 'https://', 'ftp://', 'ftps://', 'www.', 'magnet:?')
-    return text.startswith(valid_schemes)
+    
+    url_indicators = [
+        'http://', 'https://', 'www.',
+        'ftp://', 'ftps://'
+    ]
+    
+    return any(text.lower().startswith(indicator) for indicator in url_indicators)
 
-def is_magnet_link(text):
-    if not text or not isinstance(text, str):
+def is_magnet(text):
+    """Check if text is a magnet link"""
+    if not text:
         return False
-    return text.strip().lower().startswith('magnet:?')
+    return text.lower().startswith('magnet:?')
 
-def is_torrent_file(text):
-    if not text or not isinstance(text, str):
-        return False
-    return text.strip().lower().endswith('.torrent')
-
-def sanitize_filename(filename, max_length=255):
+def sanitize_filename(filename):
+    """Remove invalid characters from filename"""
     if not filename:
-        return "download"
+        return "file"
+    
+    # Invalid characters for filenames
     invalid_chars = '<>:"/\\|?*'
+    
+    # Replace invalid characters with underscore
     for char in invalid_chars:
         filename = filename.replace(char, '_')
-    filename = ''.join(char for char in filename if ord(char) >= 32)
-    if len(filename) > max_length:
-        name, ext = filename.rsplit('.', 1) if '.' in filename else (filename, '')
-        if ext:
-            max_name_length = max_length - len(ext) - 1
-            filename = name[:max_name_length] + '.' + ext
-        else:
-            filename = filename[:max_length]
+    
+    # Remove leading/trailing spaces and dots
     filename = filename.strip('. ')
+    
+    # If filename is empty after sanitization
     if not filename:
-        return "download"
+        filename = "file"
+    
     return filename
 
-def get_file_extension(url_or_filename):
-    if not url_or_filename:
+def get_file_extension(filename):
+    """Get file extension from filename"""
+    if not filename or '.' not in filename:
+        return ''
+    return filename.rsplit('.', 1)[-1].lower()
+
+def is_video_file(filename):
+    """Check if file is a video based on extension"""
+    video_extensions = [
+        'mp4', 'mkv', 'avi', 'mov', 'flv', 'wmv', 
+        'webm', 'm4v', 'mpg', 'mpeg', '3gp', 'ts'
+    ]
+    
+    ext = get_file_extension(filename)
+    return ext in video_extensions
+
+def is_audio_file(filename):
+    """Check if file is an audio file"""
+    audio_extensions = [
+        'mp3', 'wav', 'flac', 'aac', 'ogg', 
+        'wma', 'm4a', 'opus', 'ape'
+    ]
+    
+    ext = get_file_extension(filename)
+    return ext in audio_extensions
+
+def is_document_file(filename):
+    """Check if file is a document"""
+    doc_extensions = [
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 
+        'ppt', 'pptx', 'txt', 'zip', 'rar', '7z'
+    ]
+    
+    ext = get_file_extension(filename)
+    return ext in doc_extensions
+
+def format_duration(seconds):
+    """Format duration in seconds to HH:MM:SS"""
+    if not seconds or seconds < 0:
+        return "00:00"
+    
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    secs = int(seconds % 60)
+    
+    if hours > 0:
+        return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+    else:
+        return f"{minutes:02d}:{secs:02d}"
+
+async def run_command(command):
+    """Run shell command asynchronously"""
+    process = await asyncio.create_subprocess_shell(
+        command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE
+    )
+    
+    stdout, stderr = await process.communicate()
+    
+    return process.returncode, stdout.decode(), stderr.decode()
+
+def truncate_text(text, max_length=100):
+    """Truncate text to max length"""
+    if not text:
         return ""
-    clean_url = url_or_filename.split('?')[0]
-    if '.' in clean_url:
-        ext = clean_url.rsplit('.', 1)[-1].lower()
-        if len(ext) <= 5 and ext.isalnum():
-            return f".{ext}"
-    return ""
+    
+    if len(text) <= max_length:
+        return text
+    
+    return text[:max_length - 3] + "..."
 
-def format_torrent_info(peers=0, seeds=0, download_rate=0, upload_rate=0):
-    info_parts = []
-    if peers >= 0:
-        info_parts.append(f"👥 **Peers:** {peers}")
-    if seeds >= 0:
-        info_parts.append(f"🌱 **Seeds:** {seeds}")
-    if download_rate > 0:
-        info_parts.append(f"⬇️ **Down:** {humanbytes(int(download_rate))}/s")
-    if upload_rate > 0:
-        info_parts.append(f"⬆️ **Up:** {humanbytes(int(upload_rate))}/s")
-    return "\n".join(info_parts) if info_parts else ""
+def create_progress_bar(percentage, length=20):
+    """Create a progress bar string"""
+    filled = int(percentage / 100 * length)
+    empty = length - filled
+    
+    return "█" * filled + "░" * empty
 
-def validate_file_size(size, max_size):
-    if size <= 0:
-        return False, "Invalid file size"
-    if size > max_size:
-        return False, f"File size ({humanbytes(size)}) exceeds limit ({humanbytes(max_size)})"
-    return True, "Valid"
+def parse_torrent_info(info_dict):
+    """Parse torrent info dictionary"""
+    if not info_dict:
+        return {}
+    
+    return {
+        'name': info_dict.get('name', 'Unknown'),
+        'size': info_dict.get('total_size', 0),
+        'files': info_dict.get('num_files', 1),
+        'pieces': info_dict.get('num_pieces', 0)
+    }
 
-async def retry_on_flood(func, max_retries=3):
-    retries = 0
-    while retries < max_retries:
-        try:
-            return await func()
-        except FloodWait as e:
-            retries += 1
-            if retries >= max_retries:
-                raise
-            await asyncio.sleep(e.value)
-        except Exception:
-            raise
-    return None
+def validate_url(url):
+    """Validate if URL is properly formatted"""
+    if not url:
+        return False
+    
+    # Basic URL validation
+    try:
+        from urllib.parse import urlparse
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except:
+        return False
+
+def get_readable_message(current, total, status="Processing"):
+    """Get a readable progress message"""
+    percentage = (current / total) * 100 if total > 0 else 0
+    current_readable = humanbytes(current)
+    total_readable = humanbytes(total)
+    
+    return f"{status}: {percentage:.1f}% ({current_readable}/{total_readable})"
+
+def estimate_completion_time(current, total, start_time):
+    """Estimate completion time based on current progress"""
+    if current == 0:
+        return "Calculating..."
+    
+    elapsed = time.time() - start_time
+    rate = current / elapsed
+    remaining = total - current
+    eta = remaining / rate if rate > 0 else 0
+    
+    return format_time(eta)
