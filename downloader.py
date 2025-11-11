@@ -74,8 +74,9 @@ class Downloader:
             return None, f"Download error: {str(e)}"
     
     async def download_ytdlp(self, url, progress_callback=None):
-        """Download using yt-dlp with BEST quality - ORIGINAL file"""
+        """Download using yt-dlp with BEST quality - ORIGINAL file + TikTok support"""
         try:
+            # Enhanced options for TikTok and other platforms
             ydl_opts = {
                 'outtmpl': os.path.join(self.download_dir, '%(title)s.%(ext)s'),
                 'format': 'bestvideo+bestaudio/best',
@@ -84,6 +85,27 @@ class Downloader:
                 'no_warnings': False,
                 'writethumbnail': False,
                 'no_post_overwrites': True,
+                # Enhanced headers for TikTok
+                'http_headers': {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Accept-Language': 'en-us,en;q=0.5',
+                    'Sec-Fetch-Mode': 'navigate',
+                },
+                # TikTok specific options
+                'extractor_args': {
+                    'tiktok': {
+                        'api_hostname': 'api22-normal-c-useast2a.tiktokv.com'
+                    }
+                },
+                # Add cookies support for better success rate
+                'cookiefile': None,
+                # Retry options
+                'retries': 10,
+                'fragment_retries': 10,
+                'skip_unavailable_fragments': True,
+                # Force IPv4 for better compatibility
+                'source_address': '0.0.0.0',
             }
             
             loop = asyncio.get_event_loop()
@@ -106,28 +128,6 @@ class Downloader:
                 
         except Exception as e:
             return None, f"Download error: {str(e)}"
-            
-            loop = asyncio.get_event_loop()
-            
-            def download():
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    info = ydl.extract_info(url, download=True)
-                    filename = ydl.prepare_filename(info)
-                    # Get actual output file
-                    base = os.path.splitext(filename)[0]
-                    if os.path.exists(f"{base}.mp4"):
-                        filename = f"{base}.mp4"
-                    return filename, info.get('title', 'Video')
-            
-            filepath, title = await loop.run_in_executor(None, download)
-            
-            if os.path.exists(filepath):
-                return filepath, None
-            else:
-                return None, "Failed to download video"
-                
-        except Exception as e:
-            return None, f"yt-dlp error: {str(e)}"
     
     async def download_torrent(self, magnet_or_file, progress_callback=None):
         """Download torrent using libtorrent"""
@@ -193,9 +193,10 @@ class Downloader:
         if isinstance(url_or_file, str) and url_or_file.endswith('.torrent'):
             return await self.download_torrent(url_or_file, progress_callback)
         
-        # Check if URL is for YouTube, Instagram, etc.
+        # Check if URL is for YouTube, Instagram, TikTok, etc.
         video_domains = ['youtube.com', 'youtu.be', 'instagram.com', 'facebook.com', 
-                        'twitter.com', 'tiktok.com', 'vimeo.com', 'dailymotion.com']
+                        'twitter.com', 'tiktok.com', 'vimeo.com', 'dailymotion.com',
+                        'vt.tiktok.com', 'vm.tiktok.com']  # Added TikTok short URLs
         
         is_video_url = any(domain in url_or_file.lower() for domain in video_domains)
         
