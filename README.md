@@ -1,247 +1,342 @@
-# 🤖 Telegram URL Uploader Bot
 
-A powerful Telegram bot that can download files from any URL and upload them to Telegram with progress tracking, custom thumbnails, and more!
+🔗 Telegram URL Uploader Bot
 
-## ✨ Features
+<div align="center"><img src="https://i.ibb.co/Z1GwLTwZ/376833becb99.jpg" width="400" alt="Telegram URL Uploader Bot"/>    
 
-- 📥 Download files from any HTTP/HTTPS URL
-- 🎥 Download videos from YouTube, Instagram, TikTok, etc.
-- 📤 Upload files up to 4GB to Telegram
-- 📊 Real-time progress bar with speed and ETA
-- 🎨 Custom thumbnails support
-- ✏️ Custom filename and caption
-- 🚀 Speed limiting (10 MB/s) to save bandwidth
-- 💾 MongoDB integration for user data and logs
-- 📈 Statistics tracking
-- 📢 Broadcast messages to all users (owner only)
+A powerful Telegram bot that can download files from any URL and upload them to Telegram with lightning speed! ⚡
 
-## 🛠️ Installation
+🚀 Demo Bot • 📢 Updates • 🐛 Report Bug • 💡 Request Feature
 
-### 1. Clone or Download
+</div>
+---
 
-Create a new directory and save all the files:
-- `bot.py`
-- `config.py`
-- `database.py`
-- `downloader.py`
-- `helpers.py`
-- `requirements.txt`
-- `.env`
+✨ Features
 
-### 2. Install Dependencies
+🎯 Core Features
 
-```bash
+📥 Multi-Source Downloads: HTTP/HTTPS, YouTube, Instagram, TikTok, Facebook, Twitter
+
+🧲 Torrent Support: Magnet links & .torrent files
+
+🚀 Blazing Fast: Up to 500 MB/s download speed
+
+💾 Large Files: Supports up to 4GB per upload
+
+🎬 Original Quality: No compression — preserves full resolution and audio
+
+
+🛠️ Advanced Features
+
+📊 Real-time Progress: Live status with speed and ETA
+
+🎨 Custom Thumbnails: Save personal thumbnails
+
+✏️ Smart Renaming: Set custom file names dynamically
+
+📝 Custom Captions: Create your own caption templates
+
+⚙️ User Settings: Individualized preferences per user
+
+📈 Statistics: User and bot-level analytics
+
+
+
+---
+
+🔗 Supported Platforms
+
+Platform	Status	Features
+
+YouTube	✅	4K, Playlists, Subtitles
+Instagram	✅	Posts, Reels, Stories
+TikTok	✅	Videos, No watermark
+Facebook	✅	Videos, Reels
+Twitter/X	✅	Videos, GIFs
+Vimeo	✅	HD Video
+Direct Links	✅	Resume support
+Torrents	✅	Magnet & .torrent
+
+
+
+---
+
+🚀 Quick Start
+
+🧰 Prerequisites
+
+Python 3.13.7 or higher
+
+Telegram Bot Token → from @BotFather
+
+MongoDB Cloud Database → from MongoDB Atlas
+
+
+🧩 Installation
+
+git clone https://github.com/zero-creation690/Url-uploader.git
+cd Url-uploader
 pip install -r requirements.txt
-```
-
-### 3. Configure Environment Variables
-
-Edit the `.env` file with your credentials (already provided):
-
-```env
-API_HASH=your_api_hash
-APP_ID=your_app_id
-BOT_TOKEN=your_bot_token
-DATABASE_URL=your_mongodb_url
-LOG_CHANNEL=your_log_channel_id
-OWNER_ID=your_telegram_user_id
-```
-
-### 4. Run the Bot
-
-```bash
+cp .env.example .env
+# Edit .env and add your credentials
 python bot.py
-```
 
-## 📝 Commands
 
-- `/start` - Start the bot
-- `/help` - Show help message
-- `/about` - About the bot
-- `/settings` - View current settings
-- `/setname <filename>` - Set custom filename
-- `/setcaption <caption>` - Set custom caption
-- `/clearsettings` - Clear all settings
-- `/status` - Check your statistics
-- `/total` - View bot statistics (owner only)
-- `/broadcast` - Broadcast message (owner only)
+---
 
-## 🎯 Usage
+⚙️ Configuration
 
-### Download & Upload a File
+Environment Variables
 
-Simply send any URL to the bot:
+# Telegram API (Required)
+APP_ID=20288994
+API_HASH=d702614912f1ad370a0d18786002adbf
+BOT_TOKEN=8062010233:AAExAW3Z-kpT17OTUXg0GQkCVsc7qnDUbXQ
 
-```
-https://example.com/file.zip
-```
+# Database (Required)
+DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/
 
-### Download YouTube Video
+# Optional
+LOG_CHANNEL=-1001234567890
+OWNER_ID=8304706556
+SESSION_STR=your_session_string
 
-```
-https://www.youtube.com/watch?v=VIDEO_ID
-```
+Get Telegram API Credentials
 
-### Set Custom Filename
+1. Go to my.telegram.org
 
-```
-/setname MyCustomFile.mp4
-```
 
-### Set Custom Caption
+2. Create a new app to get APP_ID & API_HASH
 
-```
-/setcaption This is my custom caption with emojis 🎉
-```
 
-### Set Thumbnail
+3. Talk to @BotFather to get BOT_TOKEN
 
-Send any photo to the bot to set it as thumbnail for future uploads.
 
-## 📂 Project Structure
 
-```
-telegram-bot/
-├── bot.py              # Main bot file with command handlers
-├── config.py           # Configuration loader
-├── database.py         # MongoDB handler
-├── downloader.py       # File downloader (aiohttp + yt-dlp)
-├── helpers.py          # Utility functions
-├── requirements.txt    # Python dependencies
-├── .env               # Environment variables
-└── downloads/         # Temporary download directory (auto-created)
-```
 
-## 🔧 Technical Details
+---
 
-### Download Methods
+📖 Usage
 
-1. **HTTP/HTTPS Files**: Uses `aiohttp` for async downloading with speed limiting
-2. **Video Sites**: Uses `yt-dlp` for YouTube, Instagram, TikTok, etc.
+Command	Description
 
-### Speed Limiting
+/start	Welcome message
+/help	Full usage instructions
+/about	Bot info
+/settings	Personalize bot behavior
+/status	Show your statistics
+/rename	Rename downloaded files
 
-- Download speed: 10 MB/s (configurable in `config.py`)
-- Upload speed: 10 MB/s (configurable in `config.py`)
-- Chunk size: 512 KB
 
-### Database Schema
+How to Use 🤔
 
-**Users Collection:**
-- `user_id`: Telegram user ID
-- `username`: Telegram username
-- `first_name`: User's first name
-- `joined_date`: Date user started bot
-- `last_used`: Last activity timestamp
-- `total_downloads`: Total files downloaded
-- `total_uploads`: Total files uploaded
+1. Go to /settings and configure preferences
 
-**Logs Collection:**
-- `user_id`: User who performed action
-- `action`: Action type (start, download, upload, error)
-- `details`: Action details
-- `timestamp`: When action occurred
 
-## 🚀 Deployment
+2. Send a custom thumbnail image
 
-### Deploy on VPS/Server
 
-```bash
-# Clone repository
-git clone your-repo-url
-cd telegram-bot
+3. Paste a link like:
 
-# Install dependencies
+https://youtube.com/watch?v=VIDEO_ID | NewName.mp4
+
+
+4. Set a custom caption using /caption
+
+
+
+
+---
+
+🧱 Project Structure
+
+Url-uploader/
+├── bot.py              # Main bot logic
+├── config.py           # Configuration handler
+├── database.py         # MongoDB operations
+├── downloader.py       # Download manager
+├── helpers.py          # Utilities
+├── requirements.txt    # Dependencies
+└── .env                # Environment config
+
+
+---
+
+🧠 Technical Architecture
+
+Framework: PyroBlack 2.7.4
+
+Language: Python 3.13.7
+
+Database: MongoDB Cloud
+
+HTTP Client: aiohttp
+
+Video Tools: yt-dlp, FFmpeg
+
+Torrent Engine: libtorrent
+
+
+
+---
+
+🌍 Deployment Options
+
+🖥️ Local Run
+
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
 pip install -r requirements.txt
-
-# Configure environment
-nano .env
-
-# Run with screen or tmux
-screen -S bot
 python bot.py
-```
 
-### Deploy on Heroku
+🐳 Docker
 
-1. Create `Procfile`:
-```
-worker: python bot.py
-```
-
-2. Push to Heroku:
-```bash
-heroku create your-app-name
-git push heroku main
-heroku ps:scale worker=1
-```
-
-### Deploy with Docker
-
-Create `Dockerfile`:
-```dockerfile
-FROM python:3.11-slim
+FROM python:3.13-slim
 WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
 CMD ["python", "bot.py"]
-```
 
-## 🔐 Security Notes
+💻 VPS (Screen)
 
-- Never share your `.env` file or credentials
-- Keep your `BOT_TOKEN` and `API_HASH` private
-- Use strong MongoDB passwords
-- Restrict `OWNER_ID` commands to trusted users only
+screen -S url-bot
+python bot.py
+# Press Ctrl+A then D to detach
 
-## 📊 Performance
-
-- Supports files up to 4GB (Telegram limit)
-- Concurrent downloads/uploads
-- Automatic cleanup of temporary files
-- Speed limiting to prevent bandwidth exhaustion
-
-## 🐛 Troubleshooting
-
-### Bot not responding
-- Check if bot token is correct
-- Verify bot is running: `ps aux | grep bot.py`
-- Check logs for errors
-
-### Download fails
-- Verify URL is accessible
-- Check if website requires authentication
-- Some sites may block bots
-
-### Upload fails
-- Check file size (max 4GB)
-- Verify Telegram API credentials
-- Check internet connection
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-- Report bugs
-- Suggest features
-- Submit pull requests
-
-## 📞 Support
-
-For issues or questions:
-- Open an issue on GitHub
-- Contact: @YourUsername on Telegram
-
-## 🙏 Credits
-
-- [Pyrogram](https://docs.pyrogram.org/) - Telegram MTProto API framework
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp) - Video downloader
-- [aiohttp](https://docs.aiohttp.org/) - Async HTTP client
-- [Motor](https://motor.readthedocs.io/) - Async MongoDB driver
 
 ---
 
-Made with ❤️ for the Telegram community
+📊 Supported URL Formats
+
+# Direct Links
+"https://example.com/file.mp4"
+
+# YouTube
+"https://youtube.com/watch?v=..."
+"https://youtu.be/..."
+
+# Instagram
+"https://instagram.com/p/..."
+"https://instagram.com/reel/..."
+
+# TikTok
+"https://tiktok.com/@user/video/..."
+
+# Torrent
+"magnet:?xt=urn:btih:..."
+"file.torrent"
+
+
+---
+
+🤝 Contributing
+
+We love community contributions! ❤️
+
+1. Fork the repo
+
+
+2. Create a branch
+
+git checkout -b feature/NewFeature
+
+
+3. Commit your changes
+
+git commit -m "Add NewFeature"
+
+
+4. Push & open a pull request
+
+
+
+Development Setup
+
+pip install -r requirements-dev.txt
+python -m pytest
+black .
+
+
+---
+
+🐛 Troubleshooting
+
+Common Issues
+
+Bot not starting:
+
+Check .env credentials
+
+Verify MongoDB connection
+
+Confirm Python 3.13.7+
+
+
+Downloads failing:
+
+URL inaccessible or unsupported
+
+Network instability
+
+
+Uploads failing:
+
+File exceeds Telegram’s 4GB limit
+
+Disk space issues
+
+Telegram API timeout
+
+
+
+---
+
+📡 Getting Help
+
+📢 Updates: @zerodevbro
+
+👨‍💻 Developer: @Zeroboy216
+
+🐛 Report Issues: GitHub Issues
+
+
+
+---
+
+📄 License
+
+Licensed under the MIT License — see the LICENSE file for details.
+
+
+---
+
+🙏 Acknowledgments
+
+Pyrogram Team – Telegram API framework
+
+yt-dlp Developers – YouTube & media downloader
+
+MongoDB Atlas – Cloud database hosting
+
+Telegram – Platform for bot development
+
+
+
+---
+
+📞 Support & Links
+
+💬 Telegram: @Zeroboy216
+📢 Channel: @zerodevbro
+💾 Repository: zero-creation690/Url-uploader
+
+
+---
+
+<div align="center">⭐ If you love this project, don’t forget to give it a star! ⭐
+
+Made with ❤️ by Zero Boy
+
+🚀 Try Bot • 📢 Join Channel • 💻 GitHub
+
+</div>
