@@ -1,92 +1,95 @@
-
 🔗 Telegram URL Uploader Bot
 
-<div align="center"><img src="https://i.ibb.co/Z1GwLTwZ/376833becb99.jpg" width="400" alt="Telegram URL Uploader Bot"/>    
+<div align="center">
+
+https://i.ibb.co/Z1GwLTwZ/376833becb99.jpg
+
+https://img.shields.io/badge/Python-3.13.7-blue.svg
+https://img.shields.io/badge/Pyrogram-2.7.4-green.svg
+https://img.shields.io/badge/MongoDB-Cloud-brightgreen.svg
+https://img.shields.io/badge/License-MIT-yellow.svg
+https://img.shields.io/badge/Telegram-Bot-blue.svg
 
 A powerful Telegram bot that can download files from any URL and upload them to Telegram with lightning speed! ⚡
 
 🚀 Demo Bot • 📢 Updates • 🐛 Report Bug • 💡 Request Feature
 
 </div>
----
 
 ✨ Features
 
 🎯 Core Features
 
-📥 Multi-Source Downloads: HTTP/HTTPS, YouTube, Instagram, TikTok, Facebook, Twitter
-
-🧲 Torrent Support: Magnet links & .torrent files
-
-🚀 Blazing Fast: Up to 500 MB/s download speed
-
-💾 Large Files: Supports up to 4GB per upload
-
-🎬 Original Quality: No compression — preserves full resolution and audio
-
+· 📥 Multi-Source Downloads: HTTP/HTTPS, YouTube, Instagram, TikTok, Facebook, Twitter
+· 🧲 Torrent Support: Magnet links & .torrent files
+· 🚀 Blazing Fast: 500 MB/s download speed
+· 💾 Large Files: Support up to 4GB files
+· 🎬 Original Quality: No compression, preserve original resolution & audio
 
 🛠️ Advanced Features
 
-📊 Real-time Progress: Live status with speed and ETA
-
-🎨 Custom Thumbnails: Save personal thumbnails
-
-✏️ Smart Renaming: Set custom file names dynamically
-
-📝 Custom Captions: Create your own caption templates
-
-⚙️ User Settings: Individualized preferences per user
-
-📈 Statistics: User and bot-level analytics
-
-
-
----
+· 📊 Real-time Progress: Live progress bar with speed and ETA
+· 🎨 Custom Thumbnails: Set permanent custom thumbnails
+· ✏️ Smart Renaming: Custom filenames with pattern support
+· 📝 Custom Captions: Dynamic caption templates
+· ⚙️ User Settings: Personalized bot behavior per user
+· 📈 Statistics: Detailed user and bot analytics
 
 🔗 Supported Platforms
 
-Platform	Status	Features
-
-YouTube	✅	4K, Playlists, Subtitles
-Instagram	✅	Posts, Reels, Stories
-TikTok	✅	Videos, No watermark
-Facebook	✅	Videos, Reels
-Twitter/X	✅	Videos, GIFs
-Vimeo	✅	HD Video
-Direct Links	✅	Resume support
-Torrents	✅	Magnet & .torrent
-
-
-
----
+Platform Status Features
+YouTube ✅ 4K, Playlists, Subtitles
+Instagram ✅ Posts, Reels, Stories
+TikTok ✅ Videos, Watermark-free
+Facebook ✅ Videos, Reels
+Twitter/X ✅ Videos, GIFs
+Vimeo ✅ HD Videos
+Direct Links ✅ Resume support
+Torrents ✅ Magnet & .torrent
 
 🚀 Quick Start
 
-🧰 Prerequisites
+Prerequisites
 
-Python 3.13.7 or higher
+· Python 3.13.7 or higher
+· Telegram Bot Token (Get from @BotFather)
+· MongoDB Database (Free from MongoDB Atlas)
 
-Telegram Bot Token → from @BotFather
+Installation
 
-MongoDB Cloud Database → from MongoDB Atlas
+1. Clone the Repository
 
-
-🧩 Installation
-
+```bash
 git clone https://github.com/zero-creation690/Url-uploader.git
 cd Url-uploader
+```
+
+1. Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
+
+1. Configure Environment
+
+```bash
 cp .env.example .env
-# Edit .env and add your credentials
+# Edit .env with your credentials
+```
+
+1. Run the Bot
+
+```bash
 python bot.py
-
-
----
+```
 
 ⚙️ Configuration
 
 Environment Variables
 
+Create a .env file with:
+
+```env
 # Telegram API (Required)
 APP_ID=20288994
 API_HASH=d702614912f1ad370a0d18786002adbf
@@ -95,120 +98,130 @@ BOT_TOKEN=8062010233:AAExAW3Z-kpT17OTUXg0GQkCVsc7qnDUbXQ
 # Database (Required)
 DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/
 
-# Optional
+# Optional Settings
 LOG_CHANNEL=-1001234567890
 OWNER_ID=8304706556
 SESSION_STR=your_session_string
+```
 
 Get Telegram API Credentials
 
 1. Go to my.telegram.org
-
-
-2. Create a new app to get APP_ID & API_HASH
-
-
-3. Talk to @BotFather to get BOT_TOKEN
-
-
-
-
----
+2. Create application to get APP_ID and API_HASH
+3. Create bot with @BotFather to get BOT_TOKEN
 
 📖 Usage
 
-Command	Description
+Basic Commands
 
-/start	Welcome message
-/help	Full usage instructions
-/about	Bot info
-/settings	Personalize bot behavior
-/status	Show your statistics
-/rename	Rename downloaded files
-
+Command Description
+/start Start the bot and show welcome
+/help Detailed help with usage guide
+/about Bot information and specifications
+/settings Configure bot behavior
+/status Your download statistics
+/rename Rename downloaded files
 
 How to Use 🤔
 
-1. Go to /settings and configure preferences
+1. Configure Settings
+   ```
+   First go to /settings and change the bot behavior as your choice
+   ```
+2. Set Custom Thumbnail
+   ```
+   Send me the custom thumbnail to save it permanently
+   ```
+3. Download Files
+   ```
+   Send url | New name.mkv
+   ```
+4. Set Captions
+   ```
+   Use /caption to set caption as Reply to media
+   ```
 
+Examples
 
-2. Send a custom thumbnail image
+Download YouTube Video:
 
+```
+https://youtube.com/watch?v=VIDEO_ID | MyVideo.mp4
+```
 
-3. Paste a link like:
+Download with Custom Name:
 
-https://youtube.com/watch?v=VIDEO_ID | NewName.mp4
+```
+https://example.com/file.zip | CustomName.zip
+```
 
+Set Permanent Thumbnail:
+Just send any image to the bot
 
-4. Set a custom caption using /caption
+🏗️ Project Structure
 
-
-
-
----
-
-🧱 Project Structure
-
+```
 Url-uploader/
-├── bot.py              # Main bot logic
-├── config.py           # Configuration handler
-├── database.py         # MongoDB operations
-├── downloader.py       # Download manager
-├── helpers.py          # Utilities
-├── requirements.txt    # Dependencies
-└── .env                # Environment config
+├── bot.py                 # Main bot handler
+├── config.py             # Configuration manager
+├── database.py           # MongoDB operations
+├── downloader.py         # Multi-source downloader
+├── helpers.py            # Utility functions
+├── requirements.txt      # Dependencies
+└── .env                 # Environment variables
+```
 
+Technical Architecture
 
----
+· Framework: PyroBlack 2.7.4
+· Language: Python 3.13.7
+· Database: MongoDB Cloud
+· HTTP Client: aiohttp
+· Video Processing: yt-dlp, FFmpeg
+· Torrent: libtorrent
 
-🧠 Technical Architecture
+🚀 Deployment
 
-Framework: PyroBlack 2.7.4
+Local Deployment
 
-Language: Python 3.13.7
-
-Database: MongoDB Cloud
-
-HTTP Client: aiohttp
-
-Video Tools: yt-dlp, FFmpeg
-
-Torrent Engine: libtorrent
-
-
-
----
-
-🌍 Deployment Options
-
-🖥️ Local Run
-
+```bash
+# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Run the bot
 python bot.py
+```
 
-🐳 Docker
+Docker Deployment
 
+```dockerfile
 FROM python:3.13-slim
 WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
 CMD ["python", "bot.py"]
+```
 
-💻 VPS (Screen)
+VPS Deployment
 
+```bash
+# Using screen to keep bot running
 screen -S url-bot
 python bot.py
-# Press Ctrl+A then D to detach
+# Ctrl+A then D to detach
+```
 
+📊 API Reference
 
----
+Supported URL Formats
 
-📊 Supported URL Formats
-
-# Direct Links
+```python
+# Direct URLs
 "https://example.com/file.mp4"
 
 # YouTube
@@ -217,47 +230,47 @@ python bot.py
 
 # Instagram
 "https://instagram.com/p/..."
-"https://instagram.com/reel/..."
+"https://www.instagram.com/reel/..."
 
 # TikTok
 "https://tiktok.com/@user/video/..."
 
 # Torrent
 "magnet:?xt=urn:btih:..."
-"file.torrent"
-
-
----
+"*.torrent files"
+```
 
 🤝 Contributing
 
-We love community contributions! ❤️
+We love contributions! Here's how to help:
 
-1. Fork the repo
-
-
-2. Create a branch
-
-git checkout -b feature/NewFeature
-
-
-3. Commit your changes
-
-git commit -m "Add NewFeature"
-
-
-4. Push & open a pull request
-
-
+1. Fork the Repository
+2. Create a Feature Branch
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+3. Commit Your Changes
+   ```bash
+   git commit -m 'Add some AmazingFeature'
+   ```
+4. Push to the Branch
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+5. Open a Pull Request
 
 Development Setup
 
+```bash
+# Install development dependencies
 pip install -r requirements-dev.txt
+
+# Run tests
 python -m pytest
+
+# Code formatting
 black .
-
-
----
+```
 
 🐛 Troubleshooting
 
@@ -265,75 +278,53 @@ Common Issues
 
 Bot not starting:
 
-Check .env credentials
-
-Verify MongoDB connection
-
-Confirm Python 3.13.7+
-
+· Check API credentials in .env
+· Verify MongoDB connection string
+· Ensure Python version is 3.13.7+
 
 Downloads failing:
 
-URL inaccessible or unsupported
-
-Network instability
-
+· Check internet connection
+· Verify URL is accessible
+· Some sites may block bot requests
 
 Uploads failing:
 
-File exceeds Telegram’s 4GB limit
+· File size exceeds 4GB Telegram limit
+· Check available disk space
+· Verify Telegram API limits
 
-Disk space issues
+Getting Help
 
-Telegram API timeout
-
-
-
----
-
-📡 Getting Help
-
-📢 Updates: @zerodevbro
-
-👨‍💻 Developer: @Zeroboy216
-
-🐛 Report Issues: GitHub Issues
-
-
-
----
+· 📢 Updates Channel: @zerodevbro
+· 👨‍💻 Developer: @Zeroboy216
+· 🐛 Issues: GitHub Issues
 
 📄 License
 
-Licensed under the MIT License — see the LICENSE file for details.
-
-
----
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 🙏 Acknowledgments
 
-Pyrogram Team – Telegram API framework
+· Pyrogram Team - Amazing Telegram MTProto framework
+· yt-dlp Developers - Robust video downloader
+· MongoDB - Reliable cloud database
+· Telegram - Platform for innovation
 
-yt-dlp Developers – YouTube & media downloader
+📞 Support
 
-MongoDB Atlas – Cloud database hosting
+If you need help or want to suggest features:
 
-Telegram – Platform for bot development
-
-
-
----
-
-📞 Support & Links
-
-💬 Telegram: @Zeroboy216
-📢 Channel: @zerodevbro
-💾 Repository: zero-creation690/Url-uploader
-
+· 💬 Telegram: @Zeroboy216
+· 📢 Channel: @zerodevbro
+· 🐛 Issues: GitHub Issues
+· 💾 Repository: zero-creation690/Url-uploader
 
 ---
 
-<div align="center">⭐ If you love this project, don’t forget to give it a star! ⭐
+<div align="center">
+
+⭐ Don't forget to star this repository if you find it useful!
 
 Made with ❤️ by Zero Boy
 
