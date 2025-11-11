@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Bot Banner](https://i.ibb.co/Z1GwLTwZ/376833becb99.jpg)
+<img src="https://github.com/user-attachments/assets/d11e637d-b3da-42d6-9346-fe399665ca5c" alt="Telegram URL Uploader Bot" width="100%"/>
 
 ![Python](https://img.shields.io/badge/Python-3.13.7-blue.svg)
 ![Pyrogram](https://img.shields.io/badge/Pyrogram-2.7.4-green.svg)
