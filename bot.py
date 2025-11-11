@@ -171,12 +171,51 @@ async def handle_upload_type(client, callback: CallbackQuery):
                 progress_args=("Uploading",)
             )
         else:
-            # Upload as video
+            # Upload as video with proper attributes
+            duration = 0
+            width = 0
+            height = 0
+            
+            # Try to get video metadata
+            try:
+                import cv2
+                video = cv2.VideoCapture(filepath)
+                if video.isOpened():
+                    width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                    fps = video.get(cv2.CAP_PROP_FPS)
+                    frame_count = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+                    duration = int(frame_count / fps) if fps > 0 else 0
+                    video.release()
+            except:
+                # If cv2 fails, try ffprobe
+                try:
+                    import subprocess
+                    result = subprocess.run(
+                        ['ffprobe', '-v', 'error', '-show_entries',
+                         'format=duration:stream=width,height', '-of',
+                         'default=noprint_wrappers=1', filepath],
+                        capture_output=True, text=True, timeout=10
+                    )
+                    output = result.stdout
+                    for line in output.split('\n'):
+                        if 'duration=' in line:
+                            duration = int(float(line.split('=')[1]))
+                        elif 'width=' in line:
+                            width = int(line.split('=')[1])
+                        elif 'height=' in line:
+                            height = int(line.split('=')[1])
+                except:
+                    pass
+            
             await client.send_video(
                 chat_id=callback.message.chat.id,
                 video=filepath,
                 caption=caption,
                 thumb=thumbnail,
+                duration=duration,
+                width=width,
+                height=height,
                 supports_streaming=True,
                 progress=progress.progress_callback,
                 progress_args=("Uploading",)
