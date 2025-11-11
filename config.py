@@ -39,92 +39,75 @@ class Config:
     TORRENT_SEED_TIME = 0  # Don't seed after download
     
     # Welcome message
-    START_MESSAGE = """👋 **Hi {name}!**
+    START_MESSAGE = """ʜᴇʏ {name}**, 
+ɪ ᴀᴍ ᴛʜᴇ ᴍᴏsᴛ ᴘᴏᴡᴇʀғᴜʟ ᴀᴜᴛᴏ ᴜʀʟ ᴜᴘʟᴏᴀᴅᴇʀ ʙᴏᴛ ᴡɪᴛʜ ᴘʀᴇᴍɪᴜᴍ ғᴇᴀᴛᴜʀᴇs 🚀
+ɪ ᴄᴀɴ ᴜᴘʟᴏᴀᴅ ᴍᴏᴠɪᴇs ᴀɴᴅ ᴍᴏʀᴇ — ᴊᴜsᴛ ᴘᴀsᴛᴇ ᴀ ᴜʀʟ ᴏʀ ᴀ ᴍᴀɢɴᴇᴛ/ᴛᴏʀʀᴇɴᴛ ✨"""
 
-🎬 **I'm URL Uploader bot**. Just send me any Direct download link and I'll upload file remotely to Telegram.
+    HELP_MESSAGE = """**📚 Hᴇʟᴘ & Cᴏᴍᴍᴀɴᴅs**
 
-**⚡ Features:**
-• Direct HTTP/HTTPS downloads
-• YouTube, Instagram, TikTok videos  
-• Torrent files & magnet links
-• Up to 4GB file support
-• 500 MB/s blazing speed 🚀
+**🔗 Sᴜᴘᴘᴏʀᴛᴇᴅ Lɪɴᴋs:**
+• Dɪʀᴇᴄᴛ ᴅᴏᴡɴʟᴏᴀᴅs (HTTP/HTTPS)
+• YᴏᴜTᴜʙᴇ ᴠɪᴅᴇᴏs (ᴜᴘ ᴛᴏ 4K)
+• Iɴsᴛᴀɢʀᴀᴍ ᴘᴏsᴛs & ʀᴇᴇʟs
+• TɪᴋTᴏᴋ ᴠɪᴅᴇᴏs
+• Fᴀᴄᴇʙᴏᴏᴋ ᴠɪᴅᴇᴏs
+• Tᴡɪᴛᴛᴇʀ/X ᴠɪᴅᴇᴏs
+• Vɪᴍᴇᴏ, Dᴀɪʟʏᴍᴏᴛɪᴏɴ
+• Tᴏʀʀᴇɴᴛ ғɪʟᴇs (.ᴛᴏʀʀᴇɴᴛ)
+• Mᴀɢɴᴇᴛ ʟɪɴᴋs
 
-**📝 How to use:**
-1️⃣ Send any URL or torrent file
-2️⃣ I'll download it super fast
-3️⃣ Choose upload type (Doc/Video)
-4️⃣ Rename if needed
-5️⃣ Done! File uploaded ✅
+**⚙️ Cᴏᴍᴍᴀɴᴅs:**
+/sᴛᴀʀᴛ - Sᴛᴀʀᴛ ʙᴏᴛ & sʜᴏᴡ ᴍᴇɴᴜ
+/ʜᴇʟᴘ - Sʜᴏᴡ ᴛʜɪs ʜᴇʟᴘ ᴍᴇssᴀɢᴇ
+/ʀᴇɴᴀᴍᴇ - Rᴇɴᴀᴍᴇ ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ғɪʟᴇ
+/sᴇᴛᴛɪɴɢs - Bᴏᴛ sᴇᴛᴛɪɴɢs
+/sᴛᴀᴛᴜs - Yᴏᴜʀ sᴛᴀᴛɪsᴛɪᴄs
+/ᴀʙᴏᴜᴛ - Aʙᴏᴜᴛ ᴛʜɪs ʙᴏᴛ
 
-**👨‍💻 Developer:** {dev}
-**📢 Updates:** {channel}"""
+**💡 Tɪᴘs:**
+• Sᴇɴᴅ URL ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ
+• Sᴇɴᴅ .ᴛᴏʀʀᴇɴᴛ ғɪʟᴇ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ᴛᴏʀʀᴇɴᴛ
+• Sᴇɴᴅ ᴍᴀɢɴᴇᴛ ʟɪɴᴋ ғᴏʀ ᴛᴏʀʀᴇɴᴛ ᴅᴏᴡɴʟᴏᴀᴅ
+• Oʀɪɢɪɴᴀʟ ǫᴜᴀʟɪᴛʏ ᴘʀᴇsᴇʀᴠᴇᴅ (ɴᴏ ᴄᴏᴍᴘʀᴇssɪᴏɴ)
+• Fᴀsᴛ 500 MB/s sᴘᴇᴇᴅ ⚡
 
-    HELP_MESSAGE = """📚 **Help & Commands**
+**🎬 Vɪᴅᴇᴏ Qᴜᴀʟɪᴛʏ:**
+✅ Oʀɪɢɪɴᴀʟ ʀᴇsᴏʟᴜᴛɪᴏɴ (720ᴘ, 1080ᴘ, 4K)
+✅ Oʀɪɢɪɴᴀʟ ᴀᴜᴅɪᴏ (AAC 320ᴋʙᴘs)
+✅ Oʀɪɢɪɴᴀʟ ғʀᴀᴍᴇ ʀᴀᴛᴇ (24ғᴘs, 30ғᴘs, 60ғᴘs)
+✅ Sᴛʀᴇᴀᴍɪɴɢ sᴜᴘᴘᴏʀᴛ ᴇɴᴀʙʟᴇᴅ
 
-**🔗 Supported Links:**
-• Direct downloads (HTTP/HTTPS)
-• YouTube videos (up to 4K)
-• Instagram posts & reels
-• TikTok videos
-• Facebook videos
-• Twitter/X videos
-• Vimeo, Dailymotion
-• Torrent files (.torrent)
-• Magnet links
+**📞 Sᴜᴘᴘᴏʀᴛ:**
+**Dᴇᴠᴇʟᴏᴘᴇʀ:** {dev}
+**Uᴘᴅᴀᴛᴇs:** {channel}"""
 
-**⚙️ Commands:**
-/start - Start bot & show menu
-/help - Show this help message
-/rename - Rename downloaded file
-/settings - Bot settings
-/status - Your statistics
-/about - About this bot
+    ABOUT_MESSAGE = """**ℹ️ Aʙᴏᴜᴛ URL Uᴘʟᴏᴀᴅᴇʀ Bᴏᴛ**
 
-**💡 Tips:**
-• Send URL to download automatically
-• Send .torrent file to download torrent
-• Send magnet link for torrent download
-• Original quality preserved (no compression)
-• Fast 500 MB/s speed ⚡
+**📦 Vᴇʀsɪᴏɴ:** 3.0 Pʀᴏ
+**⚡ Sᴘᴇᴇᴅ:** 500 MB/s
+**💾 Mᴀx Sɪᴢᴇ:** 4 GB
+**🎬 Qᴜᴀʟɪᴛʏ:** Oʀɪɢɪɴᴀʟ (Nᴏ ᴄᴏᴍᴘʀᴇssɪᴏɴ)
 
-**🎬 Video Quality:**
-✅ Original resolution (720p, 1080p, 4K)
-✅ Original audio (AAC 320kbps)
-✅ Original frame rate (24fps, 30fps, 60fps)
-✅ Streaming support enabled
+**✨ Fᴇᴀᴛᴜʀᴇs:**
+✅ Dɪʀᴇᴄᴛ URL ᴅᴏᴡɴʟᴏᴀᴅs
+✅ YᴏᴜTᴜʙᴇ ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅs (4K)
+✅ Iɴsᴛᴀɢʀᴀᴍ, TɪᴋTᴏᴋ sᴜᴘᴘᴏʀᴛ
+✅ Tᴏʀʀᴇɴᴛ & ᴍᴀɢɴᴇᴛ ʟɪɴᴋs
+✅ Cᴜsᴛᴏᴍ ᴛʜᴜᴍʙɴᴀɪʟs & ᴄᴀᴘᴛɪᴏɴs
+✅ Aᴜᴛᴏ ғɪʟᴇ ᴛʏᴘᴇ ᴅᴇᴛᴇᴄᴛɪᴏɴ
+✅ Pʀᴏɢʀᴇss ᴛʀᴀᴄᴋɪɴɢ ᴡɪᴛʜ ETA
+✅ Oʀɪɢɪɴᴀʟ ǫᴜᴀʟɪᴛʏ ᴘʀᴇsᴇʀᴠᴀᴛɪᴏɴ
+✅ Sᴛʀᴇᴀᴍɪɴɢ sᴜᴘᴘᴏʀᴛ ғᴏʀ ᴠɪᴅᴇᴏs
 
-**📞 Support:**
-**Developer:** {dev}
-**Updates:** {channel}"""
+**🛠️ Tᴇᴄʜɴᴏʟᴏɢʏ:**
+• Pʏʀᴏɢʀᴀᴍ - Tᴇʟᴇɢʀᴀᴍ API
+• ʏᴛ-ᴅʟᴘ - Vɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ
+• ᴀɪᴏʜᴛᴛᴘ - HTTP ᴅᴏᴡɴʟᴏᴀᴅs
+• ʟɪʙᴛᴏʀʀᴇɴᴛ - Tᴏʀʀᴇɴᴛ sᴜᴘᴘᴏʀᴛ
+• FFᴍᴘᴇɢ - Vɪᴅᴇᴏ ᴘʀᴏᴄᴇssɪɴɢ
+• MᴏɴɢᴏDB - Dᴀᴛᴀʙᴀsᴇ
 
-    ABOUT_MESSAGE = """ℹ️ **About URL Uploader Bot**
+**👨‍💻 Dᴇᴠᴇʟᴏᴘᴇᴅ ʙʏ:** {dev}
+**📢 Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ:** {channel}
 
-**📦 Version:** 3.0 Pro
-**⚡ Speed:** 500 MB/s
-**💾 Max Size:** 4 GB
-**🎬 Quality:** Original (No compression)
-
-**✨ Features:**
-✅ Direct URL downloads
-✅ YouTube video downloads (4K)
-✅ Instagram, TikTok support
-✅ Torrent & magnet links
-✅ Custom thumbnails & captions
-✅ Auto file type detection
-✅ Progress tracking with ETA
-✅ Original quality preservation
-✅ Streaming support for videos
-
-**🛠️ Technology:**
-• Pyrogram - Telegram API
-• yt-dlp - Video downloader
-• aiohttp - HTTP downloads
-• libtorrent - Torrent support
-• FFmpeg - Video processing
-• MongoDB - Database
-
-**👨‍💻 Developed by:** {dev}
-**📢 Updates Channel:** {channel}
-
-**Made with ❤️ for Telegram users!**"""
+**Mᴀᴅᴇ ᴡɪᴛʜ ❤️ ғᴏʀ Tᴇʟᴇɢʀᴀᴍ ᴜsᴇʀs!**"""
