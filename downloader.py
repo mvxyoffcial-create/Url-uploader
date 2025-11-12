@@ -8,7 +8,7 @@ from helpers import sanitize_filename
 import time
 import shutil
 
-# Auxiliary function for formatting file sizes (Added for download_torrent readability)
+# Auxiliary function for formatting file sizes
 def format_bytes(size):
     """Format bytes into human-readable string (e.g., 1.2 GB)"""
     power = 2**10
@@ -164,7 +164,7 @@ class Downloader:
             return None, f"Download error: {str(e)}"
 
     async def download_torrent(self, magnet_or_file, progress_callback=None):
-        """Download torrent using libtorrent with optimized settings (REVISED AND FIXED)"""
+        """Download torrent using libtorrent with optimized and corrected settings"""
         ses = None
         handle = None
         try:
@@ -179,23 +179,24 @@ class Downloader:
             }
             ses.apply_settings(settings)
 
-            # 2. Setup Add Parameters using the dedicated class (FIXES: 'unknown name in torrent params: paused')
-            p = lt.add_torrent_params()
-            p.save_path = self.torrent_dir
-            p.storage_mode = lt.storage_mode_t.storage_mode_sparse
-            # Ensure torrent starts downloading (unpaused and managed)
-            p.flags = lt.torrent_flags.auto_managed 
-
-            # 3. Add Torrent/Magnet
+            # 2. Setup Add Parameters based on input type (FIXED API MISMATCH)
             if magnet_or_file.startswith('magnet:'):
-                p = lt.parse_magnet_uri(magnet_or_file, p) # Parse magnet into params object
-                handle = ses.add_torrent(p)
+                # FIX: Call parse_magnet_uri with ONE argument to get the new params object
+                p = lt.parse_magnet_uri(magnet_or_file) 
             else:
                 # It's a torrent file path
                 if not os.path.exists(magnet_or_file):
                     return None, "Torrent file not found"
+                p = lt.add_torrent_params()
                 p.ti = lt.torrent_info(magnet_or_file)
-                handle = ses.add_torrent(p)
+            
+            # Apply common settings (save_path, storage_mode, flags)
+            p.save_path = self.torrent_dir
+            p.storage_mode = lt.storage_mode_t.storage_mode_sparse
+            p.flags = lt.torrent_flags.auto_managed 
+
+            # 3. Add Torrent
+            handle = ses.add_torrent(p)
             
             # 4. Wait for Metadata and Download Loop
             metadata_timeout = 180  # 3 minutes for metadata/connection
