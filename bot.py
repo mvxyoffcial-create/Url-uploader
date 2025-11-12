@@ -301,7 +301,7 @@ async def handle_upload_type(client, callback: CallbackQuery):
     
     task = user_tasks[user_id]
     filepath = task['filepath']
-    upload_type = data.split('_')[1]  # doc or video
+    upload_type = data.split('_')[1]  # doc or original
     
     await callback.message.edit_text("⬆️ **Uploading to Telegram...**\n\nPlease wait...")
     
@@ -324,6 +324,7 @@ async def handle_upload_type(client, callback: CallbackQuery):
         progress = Progress(client, callback.message)
         
         if upload_type == 'doc':
+            # Upload as document
             await client.send_document(
                 chat_id=callback.message.chat.id,
                 document=filepath,
@@ -332,39 +333,65 @@ async def handle_upload_type(client, callback: CallbackQuery):
                 progress=progress.progress_callback,
                 progress_args=("Uploading",)
             )
-        else:
-            # Get video metadata
-            duration = width = height = 0
-            try:
-                import subprocess
-                result = subprocess.run(
-                    ['ffprobe', '-v', 'error', '-show_entries',
-                     'format=duration:stream=width,height', '-of',
-                     'default=noprint_wrappers=1', filepath],
-                    capture_output=True, text=True, timeout=10
-                )
-                for line in result.stdout.split('\n'):
-                    if 'duration=' in line:
-                        duration = int(float(line.split('=')[1]))
-                    elif 'width=' in line:
-                        width = int(line.split('=')[1])
-                    elif 'height=' in line:
-                        height = int(line.split('=')[1])
-            except:
-                pass
+        else:  # original
+            # Auto-detect and upload in original format
+            from helpers import is_video_file, get_file_extension
             
-            await client.send_video(
-                chat_id=callback.message.chat.id,
-                video=filepath,
-                caption=caption,
-                thumb=thumbnail,
-                duration=duration,
-                width=width,
-                height=height,
-                supports_streaming=True,
-                progress=progress.progress_callback,
-                progress_args=("Uploading",)
-            )
+            ext = get_file_extension(filepath).lower()
+            image_exts = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff']
+            
+            if ext in image_exts:
+                # Upload as photo (preserves aspect ratio)
+                await client.send_photo(
+                    chat_id=callback.message.chat.id,
+                    photo=filepath,
+                    caption=caption,
+                    progress=progress.progress_callback,
+                    progress_args=("Uploading",)
+                )
+            elif is_video_file(filepath):
+                # Upload as video with metadata
+                duration = width = height = 0
+                try:
+                    import subprocess
+                    result = subprocess.run(
+                        ['ffprobe', '-v', 'error', '-show_entries',
+                         'format=duration:stream=width,height', '-of',
+                         'default=noprint_wrappers=1', filepath],
+                        capture_output=True, text=True, timeout=10
+                    )
+                    for line in result.stdout.split('\n'):
+                        if 'duration=' in line:
+                            duration = int(float(line.split('=')[1]))
+                        elif 'width=' in line:
+                            width = int(line.split('=')[1])
+                        elif 'height=' in line:
+                            height = int(line.split('=')[1])
+                except:
+                    pass
+                
+                await client.send_video(
+                    chat_id=callback.message.chat.id,
+                    video=filepath,
+                    caption=caption,
+                    thumb=thumbnail,
+                    duration=duration,
+                    width=width,
+                    height=height,
+                    supports_streaming=True,
+                    progress=progress.progress_callback,
+                    progress_args=("Uploading",)
+                )
+            else:
+                # Fallback to document for unknown types
+                await client.send_document(
+                    chat_id=callback.message.chat.id,
+                    document=filepath,
+                    caption=caption,
+                    thumb=thumbnail,
+                    progress=progress.progress_callback,
+                    progress_args=("Uploading",)
+                )
         
         await db.update_stats(user_id, upload=True)
         await db.log_action(user_id, "upload", filepath)
@@ -389,13 +416,15 @@ async def handle_upload_type(client, callback: CallbackQuery):
         
         # Log to channel
         try:
+            upload_type_name = 'Original' if upload_type == 'original' else 'Document'
+            
             await client.send_message(
                 Config.LOG_CHANNEL,
                 f"📤 **New Upload**\n\n"
                 f"👤 User: {callback.from_user.mention}\n"
                 f"📁 File: `{filename}`\n"
                 f"💾 Size: {humanbytes(filesize)}\n"
-                f"📊 Type: {'Document' if upload_type == 'doc' else 'Video'}"
+                f"📊 Type: {upload_type_name}"
             )
         except:
             pass
@@ -409,31 +438,63 @@ async def handle_upload_type(client, callback: CallbackQuery):
             del user_tasks[user_id]
 
 async def cooldown_refresh_message(client, message, user_id):
-    """Refresh the cooldown message every 10 seconds"""
+    """Refresh the cooldown message every 10 seconds with improved error handling"""
+    last_text = ""
+    consecutive_errors = 0
+    max_consecutive_errors = 3
+    
     try:
         while True:
             remaining = get_remaining_time(user_id)
             
             if remaining <= 0:
-                # Cooldown finished
-                await message.edit_text(
-                    "✅ **Upload Complete!**\n\n"
-                    "🚀 **You can send new task now!**"
-                )
+                # Cooldown finished - send completion message
+                try:
+                    await message.edit_text(
+                        "✅ **Upload Complete!**\n\n"
+                        "🚀 **You can send new task now!**"
+                    )
+                except Exception as e:
+                    print(f"Error updating final cooldown message: {e}")
+                    # Try sending new message if edit fails
+                    try:
+                        await client.send_message(
+                            message.chat.id,
+                            "🚀 **You can send new task now!**"
+                        )
+                    except:
+                        pass
                 break
             
-            # Update message with remaining time
+            # Create new message text
             time_str = format_time(remaining)
-            await message.edit_text(
+            new_text = (
                 f"✅ **Upload Complete!**\n\n"
                 f"⏳ You can send new task after **{time_str}**"
             )
             
+            # Only update if text has changed
+            if new_text != last_text:
+                try:
+                    await message.edit_text(new_text)
+                    last_text = new_text
+                    consecutive_errors = 0  # Reset error counter on success
+                except Exception as e:
+                    consecutive_errors += 1
+                    print(f"Error refreshing cooldown message (attempt {consecutive_errors}): {e}")
+                    
+                    # If too many consecutive errors, stop trying
+                    if consecutive_errors >= max_consecutive_errors:
+                        print(f"Stopping cooldown refresh for user {user_id} due to repeated errors")
+                        break
+            
             # Wait 10 seconds before next update
             await asyncio.sleep(10)
             
+    except asyncio.CancelledError:
+        print(f"Cooldown refresh task cancelled for user {user_id}")
     except Exception as e:
-        print(f"Error refreshing cooldown message: {e}")
+        print(f"Unexpected error in cooldown refresh: {e}")
 
 # Handle rename callback
 @app.on_callback_query(filters.regex("^rename_"))
@@ -462,9 +523,10 @@ async def handle_rename_callback(client, callback: CallbackQuery):
         # Skip rename, show upload options
         user_tasks[user_id]['waiting_rename'] = False
         
+        # Simple universal upload options
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("📁 Upload as Document", callback_data="upload_doc")],
-            [InlineKeyboardButton("🎥 Upload as Video", callback_data="upload_video")]
+            [InlineKeyboardButton("📤 Upload as Original", callback_data="upload_original")],
+            [InlineKeyboardButton("📁 Upload as Document", callback_data="upload_doc")]
         ])
         
         await callback.message.edit_text(
@@ -505,8 +567,8 @@ async def handle_text_input(client, message: Message):
                 
                 # Show upload options
                 keyboard = InlineKeyboardMarkup([
-                    [InlineKeyboardButton("📁 Upload as Document", callback_data="upload_doc")],
-                    [InlineKeyboardButton("🎥 Upload as Video", callback_data="upload_video")]
+                    [InlineKeyboardButton("📤 Upload as Original", callback_data="upload_original")],
+                    [InlineKeyboardButton("📁 Upload as Document", callback_data="upload_doc")]
                 ])
                 
                 await message.reply_text(
