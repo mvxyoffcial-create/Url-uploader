@@ -66,5 +66,6 @@ class Config:
 ├🚨 **Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ** : <a href=https://t.me/zerodevsupport> Zᴇʀᴏ Sᴜᴘᴘᴏʀᴛ</a>
 ├🥏 **Cʜᴀɴɴᴇʟ** : <a href=https://t.me/zerodevbro> Zᴇʀᴏ Dᴇᴠ </a>
 ├👨‍💻 **Cʀᴇᴀᴛᴇʀ** :  @Zeroboy216
+├🧬 **Bᴜɪʟᴅ Sᴛᴀᴛᴜs** :  ᴠ1.4 [ ꜱᴛᴀʙʟᴇ ]
 ╰───────────────⍟
 """
