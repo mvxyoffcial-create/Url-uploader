@@ -8,7 +8,7 @@ from helpers import sanitize_filename
 import time
 import shutil
 
-# Auxiliary function for formatting file sizes
+# Auxiliary function for formatting file sizes (Added for download_torrent readability)
 def format_bytes(size):
     """Format bytes into human-readable string (e.g., 1.2 GB)"""
     power = 2**10
@@ -21,7 +21,6 @@ def format_bytes(size):
 
 class Downloader:
     def __init__(self):
-        # NOTE: Assuming Config.MAX_FILE_SIZE is set, e.g., 4 * 1024 * 1024 * 1024 (4 GB)
         self.download_dir = Config.DOWNLOAD_DIR
         self.torrent_dir = Config.TORRENT_DOWNLOAD_PATH
         if not os.path.exists(self.download_dir):
@@ -31,7 +30,6 @@ class Downloader:
 
     async def download_file(self, url, filename=None, progress_callback=None):
         """Download file from URL using aiohttp with maximum speed - preserves original quality"""
-        # (Rest of the download_file method remains unchanged)
         try:
             timeout = aiohttp.ClientTimeout(total=None, connect=30, sock_read=30)
             headers = {
@@ -100,7 +98,6 @@ class Downloader:
 
     async def download_ytdlp(self, url, progress_callback=None):
         """Download using yt-dlp with BEST quality - ORIGINAL file + TikTok support"""
-        # (Rest of the download_ytdlp method remains unchanged)
         try:
             ydl_opts = {
                 'outtmpl': os.path.join(self.download_dir, '%(title)s.%(ext)s'),
@@ -167,7 +164,7 @@ class Downloader:
             return None, f"Download error: {str(e)}"
 
     async def download_torrent(self, magnet_or_file, progress_callback=None):
-        """Download torrent using libtorrent with optimized settings (REVISED)"""
+        """Download torrent using libtorrent with optimized settings (REVISED AND FIXED)"""
         ses = None
         handle = None
         try:
@@ -176,30 +173,31 @@ class Downloader:
             ses.add_dht_router('router.bittorrent.com', 6881)
             ses.add_dht_router('router.utorrent.com', 6881)
             
-            # Simple, stable settings
             settings = {
                 'connections_limit': 400,
                 'alert_mask': lt.alert.category_t.error_notification | lt.alert.category_t.storage_notification | lt.alert.category_t.status_notification
             }
             ses.apply_settings(settings)
-            
-            params = {
-                'save_path': self.torrent_dir,
-                'storage_mode': lt.storage_mode_t.storage_mode_sparse,
-                'paused': False,
-                'auto_managed': True
-            }
 
-            # 2. Add Torrent/Magnet
+            # 2. Setup Add Parameters using the dedicated class (FIXES: 'unknown name in torrent params: paused')
+            p = lt.add_torrent_params()
+            p.save_path = self.torrent_dir
+            p.storage_mode = lt.storage_mode_t.storage_mode_sparse
+            # Ensure torrent starts downloading (unpaused and managed)
+            p.flags = lt.torrent_flags.auto_managed 
+
+            # 3. Add Torrent/Magnet
             if magnet_or_file.startswith('magnet:'):
-                handle = lt.add_magnet_uri(ses, magnet_or_file, params)
+                p = lt.parse_magnet_uri(magnet_or_file, p) # Parse magnet into params object
+                handle = ses.add_torrent(p)
             else:
+                # It's a torrent file path
                 if not os.path.exists(magnet_or_file):
                     return None, "Torrent file not found"
-                info = lt.torrent_info(magnet_or_file)
-                handle = ses.add_torrent({'ti': info, 'save_path': self.torrent_dir, **params})
+                p.ti = lt.torrent_info(magnet_or_file)
+                handle = ses.add_torrent(p)
             
-            # 3. Wait for Metadata and Download Loop
+            # 4. Wait for Metadata and Download Loop
             metadata_timeout = 180  # 3 minutes for metadata/connection
             download_timeout = 7200 # 2 hours overall download timeout
             start_time = time.time()
@@ -229,12 +227,15 @@ class Downloader:
                     if elapsed > metadata_timeout:
                         return None, "Timeout waiting for torrent metadata (3 min)"
 
+                    # Update status message with connected peers
                     status_msg = f"Connecting... ({s.num_peers} peers, {s.num_incomplete} seeds)"
-                    await progress_callback(0, 100, status_msg)
+                    if progress_callback:
+                        await progress_callback(0, 100, status_msg)
                 
                 else:
                     # Download phase
-                    total_size = handle.get_torrent_info().total_size()
+                    info = handle.get_torrent_info()
+                    total_size = info.total_size()
                     
                     if total_size > Config.MAX_FILE_SIZE:
                         return None, f"Torrent size ({format_bytes(total_size)}) exceeds limit."
@@ -250,11 +251,11 @@ class Downloader:
                 # Wait for 1 second before the next loop iteration
                 await asyncio.sleep(1)
 
-            # 4. Finalize
+            # 5. Finalize (after seeding)
             info = handle.get_torrent_info()
             name = info.name()
 
-            # Determine final file path (handles single file torrents vs folder torrents)
+            # Determine final file path
             if info.num_files() == 1:
                 filepath = os.path.join(self.torrent_dir, info.files().file_path(0))
             else:
@@ -263,14 +264,11 @@ class Downloader:
             return filepath, None
             
         except Exception as e:
-            # Catch all other exceptions
             return None, f"Torrent error: {str(e)}"
         finally:
             # Clean up the handle and session
-            if handle and handle.is_valid():
+            if ses and handle and handle.is_valid():
                 ses.remove_torrent(handle)
-            # NOTE: Session cleanup isn't strictly necessary with this simple usage
-            # but is good practice in long-running apps.
 
     async def download(self, url_or_file, filename=None, progress_callback=None):
         """Main download function - auto-detects type"""
@@ -278,11 +276,9 @@ class Downloader:
         if not url_or_file:
             return None, "No URL or file provided"
         
-        # Check if it's a magnet link or torrent file
         if isinstance(url_or_file, str) and (url_or_file.startswith('magnet:') or url_or_file.endswith('.torrent')):
             return await self.download_torrent(url_or_file, progress_callback)
         
-        # Check if URL is for video sites
         video_domains = [
             'youtube.com', 'youtu.be', 'instagram.com', 'facebook.com', 
             'twitter.com', 'tiktok.com', 'vimeo.com', 'dailymotion.com',
