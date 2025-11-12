@@ -465,7 +465,7 @@ def cleanup_temp_files(directory, pattern="*.tmp"):
 async def fix_video_metadata(input_path, output_path):
     """
     Fix video metadata to ensure correct rotation and aspect ratio,
-    without re-encoding the main video stream if possible.
+    without re-encodding the main video stream if possible.
     """
     if not os.path.exists(input_path):
         return None
@@ -495,8 +495,8 @@ async def create_video_thumbnail(video_path, thumbnail_path, width, height):
     if not os.path.exists(video_path) or width <= 0 or height <= 0:
         return False
 
-    # Ffmpeg requires width and height to be even numbers for some formats,
-    # and we target a maximum dimension of 320px for Telegram thumbnails.
+    # Ffmpeg requires width and height to be even numbers for some formats.
+    # We target a maximum dimension of 320px for Telegram thumbnails.
     
     # Calculate scale filter to ensure max dimension is 320 while keeping ratio
     # If video is horizontal (width >= height), scale width to 320 and height automatically (-1)
@@ -507,7 +507,8 @@ async def create_video_thumbnail(video_path, thumbnail_path, width, height):
         scale_filter = "scale=-1:320"
         
     # Add format pixel correction filter to ensure compatibility
-    scale_filter += ":force_original_aspect_ratio=increase:flags=bicubic,pad=ceil(iw/2)*2:ceil(ih/2)*2"
+    # pad=ceil(iw/2)*2:ceil(ih/2)*2 ensures width/height are even
+    scale_filter += ",force_original_aspect_ratio=increase:flags=bicubic,pad=ceil(iw/2)*2:ceil(ih/2)*2"
 
 
     # Ffmpeg command to seek to 1 second, capture one frame, apply scaling, and overwrite
