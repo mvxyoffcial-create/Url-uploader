@@ -30,7 +30,7 @@ user_cooldowns = {}
 COOLDOWN_TIME = 159  # 2 minutes 39 seconds
 
 # Random emojis for reactions
-REACTION_EMOJIS = ["👍", "❤", "🔥", "🎉", "😍", "👏", "⚡", "✨", "💯", "🚀"]
+REACTION_EMOJIS = ["❤️", "🥰", "🔥", "💋", "😍", "😘", "☺️", "👍", "🎉", "👏", "⚡", "✨", "💯", "🚀"]
 
 # Welcome image URL
 WELCOME_IMAGE = "https://ar-hosting.pages.dev/1762658234858.jpg"
@@ -57,6 +57,14 @@ def get_remaining_time(user_id):
     
     return int(remaining)
 
+async def add_random_reaction(message: Message):
+    """Add a random reaction to a message"""
+    try:
+        random_emoji = random.choice(REACTION_EMOJIS)
+        await message.react(random_emoji)
+    except Exception as e:
+        print(f"Reaction failed: {e}")
+
 # Start command - Auto-filter style with random reaction and image
 @app.on_message(filters.command("start") & filters.private)
 async def start_command(client, message: Message):
@@ -67,11 +75,7 @@ async def start_command(client, message: Message):
     await db.add_user(user_id, username, first_name)
     
     # Add random reaction to /start message
-    try:
-        random_emoji = random.choice(REACTION_EMOJIS)
-        await message.react(random_emoji)
-    except Exception as e:
-        print(f"Reaction failed: {e}")
+    await add_random_reaction(message)
     
     text = Config.START_MESSAGE.format(
         name=first_name,
@@ -115,6 +119,9 @@ async def help_callback(client, callback: CallbackQuery):
 
 @app.on_message(filters.command("help") & filters.private)
 async def help_command(client, message: Message):
+    # Add reaction to help command
+    await add_random_reaction(message)
+    
     text = Config.HELP_MESSAGE.format(
         dev=Config.DEVELOPER,
         channel=Config.UPDATE_CHANNEL
@@ -146,6 +153,9 @@ async def about_callback(client, callback: CallbackQuery):
 
 @app.on_message(filters.command("about") & filters.private)
 async def about_command(client, message: Message):
+    # Add reaction to about command
+    await add_random_reaction(message)
+    
     text = Config.ABOUT_MESSAGE.format(
         dev=Config.DEVELOPER,
         channel=Config.UPDATE_CHANNEL
@@ -190,6 +200,9 @@ async def settings_callback(client, callback: CallbackQuery):
 
 @app.on_message(filters.command("settings") & filters.private)
 async def settings_command(client, message: Message):
+    # Add reaction to settings command
+    await add_random_reaction(message)
+    
     user_id = message.from_user.id
     settings = user_settings.get(user_id, {})
     
@@ -251,6 +264,9 @@ async def status_callback(client, callback: CallbackQuery):
 
 @app.on_message(filters.command("status") & filters.private)
 async def status_command(client, message: Message):
+    # Add reaction to status command
+    await add_random_reaction(message)
+    
     user_id = message.from_user.id
     user_data = await db.get_user(user_id)
     
@@ -551,6 +567,13 @@ async def handle_rename_callback(client, callback: CallbackQuery):
 async def handle_text_input(client, message: Message):
     user_id = message.from_user.id
     
+    # Check if message is part of media group (skip reaction for media groups)
+    if message.media_group_id:
+        return
+    
+    # Add reaction to user message
+    await add_random_reaction(message)
+    
     # Check if waiting for rename
     if user_id in user_tasks and user_tasks[user_id].get('waiting_rename'):
         new_name = sanitize_filename(message.text.strip())
@@ -607,6 +630,9 @@ async def handle_text_input(client, message: Message):
 @app.on_message(filters.document & filters.private)
 async def handle_document(client, message: Message):
     user_id = message.from_user.id
+    
+    # Add reaction to document message
+    await add_random_reaction(message)
     
     # Check cooldown
     remaining = get_remaining_time(user_id)
@@ -708,6 +734,8 @@ async def process_download(client, message: Message, url):
 # Settings commands
 @app.on_message(filters.command("setname") & filters.private)
 async def setname_command(client, message: Message):
+    await add_random_reaction(message)
+    
     user_id = message.from_user.id
     if len(message.command) < 2:
         await message.reply_text(
@@ -725,6 +753,8 @@ async def setname_command(client, message: Message):
 
 @app.on_message(filters.command("setcaption") & filters.private)
 async def setcaption_command(client, message: Message):
+    await add_random_reaction(message)
+    
     user_id = message.from_user.id
     if len(message.command) < 2:
         await message.reply_text(
@@ -742,6 +772,8 @@ async def setcaption_command(client, message: Message):
 
 @app.on_message(filters.command("clearsettings") & filters.private)
 async def clearsettings_command(client, message: Message):
+    await add_random_reaction(message)
+    
     user_id = message.from_user.id
     if user_id in user_settings:
         user_settings[user_id] = {}
@@ -750,6 +782,8 @@ async def clearsettings_command(client, message: Message):
 # Thumbnail handler
 @app.on_message(filters.photo & filters.private)
 async def handle_thumbnail(client, message: Message):
+    await add_random_reaction(message)
+    
     user_id = message.from_user.id
     
     status_msg = await message.reply_text("📥 Downloading thumbnail...")
@@ -778,6 +812,8 @@ async def handle_thumbnail(client, message: Message):
 # Show thumbnail command
 @app.on_message(filters.command("showthumb") & filters.private)
 async def showthumb_command(client, message: Message):
+    await add_random_reaction(message)
+    
     user_id = message.from_user.id
     settings = user_settings.get(user_id, {})
     
@@ -823,6 +859,8 @@ async def delete_thumb_callback(client, callback: CallbackQuery):
 # Total stats command (owner only)
 @app.on_message(filters.command("total") & filters.user(Config.OWNER_ID))
 async def total_command(client, message: Message):
+    await add_random_reaction(message)
+    
     stats = await db.get_stats()
     
     text = f"""📈 **Bot Statistics**
@@ -848,6 +886,8 @@ async def total_command(client, message: Message):
 # Broadcast (owner only)
 @app.on_message(filters.command("broadcast") & filters.user(Config.OWNER_ID))
 async def broadcast_command(client, message: Message):
+    await add_random_reaction(message)
+    
     if not message.reply_to_message:
         await message.reply_text("❌ **Reply to a message to broadcast!**")
         return
@@ -902,6 +942,8 @@ async def broadcast_command(client, message: Message):
 # Cancel command - Cancel current task
 @app.on_message(filters.command("cancel") & filters.private)
 async def cancel_command(client, message: Message):
+    await add_random_reaction(message)
+    
     user_id = message.from_user.id
     
     if user_id in user_tasks:
@@ -928,6 +970,8 @@ async def cancel_command(client, message: Message):
 # Ping command - Check bot status
 @app.on_message(filters.command("ping") & filters.private)
 async def ping_command(client, message: Message):
+    await add_random_reaction(message)
+    
     start = time.time()
     reply = await message.reply_text("🏓 **Pinging...**")
     end = time.time()
@@ -943,6 +987,8 @@ async def ping_command(client, message: Message):
 # Error handler for unknown commands
 @app.on_message(filters.command(["unknown"]) & filters.private)
 async def unknown_command(client, message: Message):
+    await add_random_reaction(message)
+    
     await message.reply_text(
         "❓ **Unknown command!**\n\n"
         "Use /help to see available commands."
