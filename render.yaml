@@ -18,7 +18,7 @@ services:
       - key: DATABASE_URL
         value: mongodb+srv://dsadeepa02_db_user:zero8907@cluster0.nfiluqd.mongodb.net/?appName=Cluster0
       - key: LOG_CHANNEL
-        value: -1002897456594
+        value: -1003551533948
       - key: OWNER_ID
         value: 8312532076
       - key: SESSION_STR
