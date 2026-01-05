@@ -14,7 +14,7 @@ class Config:
     DATABASE_URL = os.environ.get("DATABASE_URL", "mongodb+srv://moviedatabase:venura%408907@cluster0.hg0etvt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     
     # Logging
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002897456594"))
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1003551533948)
     
     # Owner
     OWNER_ID = int(os.environ.get("OWNER_ID", "8312532076"))
