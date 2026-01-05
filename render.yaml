@@ -8,23 +8,23 @@ services:
     dockerContext: .
     envVars:
       - key: APP_ID
-        value: 20288994
+        value: "20288994"
       - key: API_HASH
-        value: d702614912f1ad370a0d18786002adbf
+        value: "d702614912f1ad370a0d18786002adbf"
       - key: BOT_TOKEN
-        value: 8370060694:AAGkcQUUkxne2v5Rh0EhKFGX88Te-kHNG7g
+        value: "8370060694:AAGkcQUUkxne2v5Rh0EhKFGX88Te-kHNG7g"
       - key: BOT_USERNAME
         value: "@Urluploader_z_bot"
       - key: DATABASE_URL
-        value: mongodb+srv://dsadeepa02_db_user:zero8907@cluster0.nfiluqd.mongodb.net/?appName=Cluster0
+        value: "mongodb+srv://dsadeepa02_db_user:zero8907@cluster0.nfiluqd.mongodb.net/?appName=Cluster0"
       - key: LOG_CHANNEL
-        value: -1003551533948
+        value: "-1003551533948"
       - key: OWNER_ID
-        value: 8312532076
+        value: "8312532076"
       - key: SESSION_STR
         value: ""
       - key: UPDATE_CHANNEL
-        value: https://t.me/zerodevbro
+        value: "https://t.me/zerodevbro"
       - key: PYTHONUNBUFFERED
         value: "1"
     autoDeploy: true
