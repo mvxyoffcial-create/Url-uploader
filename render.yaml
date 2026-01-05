@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: telegram-url-uploader-bot
+    env: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: APP_ID
+        sync: false
+      - key: API_HASH
+        sync: false
+      - key: BOT_TOKEN
+        sync: false
+      - key: BOT_USERNAME
+        value: "@Urluploader_z_bot"
+      - key: DATABASE_URL
+        sync: false
+      - key: LOG_CHANNEL
+        value: -1002897456594
+      - key: OWNER_ID
+        value: 8304706556
+      - key: SESSION_STR
+        value: ""
+      - key: UPDATE_CHANNEL
+        value: "https://t.me/zerodevbro"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    disk:
+      name: downloads
+      mountPath: /app/downloads
+      sizeGB: 10
+    autoDeploy: true
+    healthCheckPath: /
