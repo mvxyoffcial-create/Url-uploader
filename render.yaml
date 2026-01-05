@@ -1,4 +1,3 @@
-yaml
 services:
   - type: web
     name: telegram-url-uploader-bot
