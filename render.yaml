@@ -14,22 +14,17 @@ services:
       - key: BOT_TOKEN
         sync: false
       - key: BOT_USERNAME
-        value: "@Urluploader_z_bot"
+        sync: false
       - key: DATABASE_URL
         sync: false
       - key: LOG_CHANNEL
-        value: -1002897456594
+        sync: false
       - key: OWNER_ID
-        value: 8304706556
+        sync: false
       - key: SESSION_STR
         value: ""
       - key: UPDATE_CHANNEL
-        value: "https://t.me/zerodevbro"
+        sync: false
       - key: PYTHONUNBUFFERED
         value: "1"
-    disk:
-      name: downloads
-      mountPath: /app/downloads
-      sizeGB: 10
     autoDeploy: true
-    healthCheckPath: /
