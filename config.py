@@ -7,7 +7,7 @@ class Config:
     # Telegram API credentials
     APP_ID = int(os.environ.get("APP_ID", "20288994"))
     API_HASH = os.environ.get("API_HASH", "d702614912f1ad370a0d18786002adbf")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "8062010233:AAExAW3Z-kpT17OTUXg0GQkCVsc7qnDUbXQ")
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "8370060694:AAGkcQUUkxne2v5Rh0EhKFGX88Te-kHNG7g")
     BOT_USERNAME = os.environ.get("BOT_USERNAME", "@Urluploader_z_bot")
     
     # Database
@@ -17,7 +17,7 @@ class Config:
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002897456594"))
     
     # Owner
-    OWNER_ID = int(os.environ.get("OWNER_ID", "8304706556"))
+    OWNER_ID = int(os.environ.get("OWNER_ID", "8312532076"))
     
     # Session for user bot (if needed)
     SESSION_STR = os.environ.get("SESSION_STR", "")
