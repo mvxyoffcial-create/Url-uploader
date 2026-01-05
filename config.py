@@ -14,7 +14,8 @@ class Config:
     DATABASE_URL = os.environ.get("DATABASE_URL", "mongodb+srv://moviedatabase:venura%408907@cluster0.hg0etvt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     
     # Logging
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1003551533948)
+    # FIXED: Added missing closing quote and parenthesis
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1003551533948"))
     
     # Owner
     OWNER_ID = int(os.environ.get("OWNER_ID", "8312532076"))
@@ -43,6 +44,7 @@ class Config:
     START_MESSAGE = """ʜᴇʏ {name}**, 
 ɪ ᴀᴍ ᴛʜᴇ ᴍᴏsᴛ ᴘᴏᴡᴇʀғᴜʟ ᴀᴜᴛᴏ ᴜʀʟ ᴜᴘʟᴏᴀᴅᴇʀ ʙᴏᴛ ᴡɪᴛʜ ᴘʀᴇᴍɪᴜᴍ ғᴇᴀᴛᴜʀᴇs 🚀
 ɪ ᴄᴀɴ ᴜᴘʟᴏᴀᴅ ᴍᴏᴠɪᴇs ᴀɴᴅ ᴍᴏʀᴇ — ᴊᴜsᴛ ᴘᴀsᴛᴇ ᴀ ᴜʀʟ ᴏʀ ᴀ ᴍᴀɢɴᴇᴛ/ᴛᴏʀʀᴇɴᴛ ✨"""
+
     HELP_MESSAGE = """
 **Hᴏᴡ Tᴏ Usᴇ Tʜɪs Bᴏᴛ** 🤔
    
@@ -55,16 +57,16 @@ class Config:
 𖣔 Sᴇʟᴇᴄᴛ ᴛʜᴇ ᴅᴇsɪʀᴇᴅ ᴏᴘᴛɪᴏɴ.
 
 𖣔 Usᴇ `/caption` ᴛᴏ sᴇᴛ ᴄᴀᴘᴛɪᴏɴ ᴀs Rᴇᴘʟʏ ᴛᴏ ᴍᴇᴅɪᴀ
-
 """
-    ABOUT_MESSAGE ="""
+
+    ABOUT_MESSAGE = """
 ╭───────────⍟
 ├📛 **Mʏ Nᴀᴍᴇ** : URL Uᴘʟᴏᴀᴅᴇʀ Bᴏᴛ
-├📢 **Fʀᴀᴍᴇᴡᴏʀᴋ** : <a href=https://docs.pyrogram.org/>PʏʀᴏBʟᴀᴄᴋ 2.7.4</a>
-├💮 **Lᴀɴɢᴜᴀɢᴇ** : <a href=https://www.python.org>Pʏᴛʜᴏɴ 3.13.7</a>
-├💾 **Dᴀᴛᴀʙᴀsᴇ** : <a href=https://cloud.mongodb.com>MᴏɴɢᴏDB</a>
-├🚨 **Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ** : <a href=https://t.me/zerodevsupport> Zᴇʀᴏ Sᴜᴘᴘᴏʀᴛ</a>
-├🥏 **Cʜᴀɴɴᴇʟ** : <a href=https://t.me/zerodevbro> Zᴇʀᴏ Dᴇᴠ </a>
+├📢 **Fʀᴀᴍᴇᴡᴏʀᴋ** : <a href="https://docs.pyrogram.org/">PʏʀᴏBʟᴀᴄᴋ 2.7.4</a>
+├💮 **Lᴀɴɢᴜᴀɢᴇ** : <a href="https://www.python.org">Pʏᴛʜᴏɴ 3.13.7</a>
+├💾 **Dᴀᴛᴀʙᴀsᴇ** : <a href="https://cloud.mongodb.com">MᴏɴɢᴏDB</a>
+├🚨 **Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ** : <a href="https://t.me/zerodevsupport"> Zᴇʀᴏ Sᴜᴘᴘᴏʀᴛ</a>
+├🥏 **Cʜᴀɴɴᴇʟ** : <a href="https://t.me/zerodevbro"> Zᴇʀᴏ Dᴇᴠ </a>
 ├👨‍💻 **Cʀᴇᴀᴛᴇʀ** :  @Zeroboy216
 ├🧬 **Bᴜɪʟᴅ Sᴛᴀᴛᴜs** :  ᴠ1.4 [ ꜱᴛᴀʙʟᴇ ]
 ╰───────────────⍟
