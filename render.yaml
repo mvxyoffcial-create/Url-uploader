@@ -16,7 +16,7 @@ services:
       - key: BOT_USERNAME
         value: "@Urluploader_z_bot"
       - key: DATABASE_URL
-        value: mongodb+srv://moviedatabase:venura%408907@cluster0.hg0etvt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+        value: mongodb+srv://dsadeepa02_db_user:zero8907@cluster0.nfiluqd.mongodb.net/?appName=Cluster0
       - key: LOG_CHANNEL
         value: -1002897456594
       - key: OWNER_ID
